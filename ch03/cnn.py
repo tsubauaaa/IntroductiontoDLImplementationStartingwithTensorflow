@@ -56,21 +56,6 @@ out = tf.nn.softmax(tf.matmul(h_fc1, w_fc2) * b_fc2)
 img = tf.reshape(x, [-1, 28, 28, 1])
 tf.summary.image("input_data", img, 10)
 
-# # 入力層から中間層
-# with tf.name_scope("hidden"):
-#     w_1 = tf.Variable(tf.truncated_normal([784, 64], stddev=0.1), name="w_1")
-#     b_1 = tf.Variable(tf.zeros([64]), name="b1")
-#     h_1 = tf.nn.relu(tf.matmul(x, w_1) + b_1)
-
-#     # 中間層の重みの分布をログ出力
-#     tf.summary.histogram('w_1', w_1)
-
-# # 中間層から出力層
-# with tf.name_scope("output"):
-#     w_2 = tf.Variable(tf.truncated_normal([64, 10], stddev=0.1), name="w_2")
-#     b_2 = tf.Variable(tf.zeros([10]), name="b_2")
-#     out = tf.nn.softmax(tf.matmul(h_1, w_2) + b_2)
-
 y = tf.placeholder(tf.float32, [None, 10])
 
 # 誤差関数
@@ -98,6 +83,8 @@ summary_op = tf.summary.merge_all()
 # 初期化
 init = tf.global_variables_initializer()
 
+saver = tf.train.Saver(max_to_keep=3)
+
 with tf.Session() as sess:
 
     summary_writer = tf.summary.FileWriter("logs", sess.graph)
@@ -108,7 +95,8 @@ with tf.Session() as sess:
     test_images = mnist.test.images
     test_labels = mnist.test.labels
 
-    for step in range(1000):
+    for i in range(1000):
+        step = i + 1
         train_images, train_labels = mnist.train.next_batch(50)
         sess.run(train_step, feed_dict={x: train_images, y: train_labels})
 
@@ -120,5 +108,7 @@ with tf.Session() as sess:
             summary_writer.add_summary(summary_str, step)
             acc_val = sess.run(accuracy, feed_dict={x: test_images, y: test_labels})
             print('Step %d: accuracy = %.2f' % (step, acc_val))
+            # モデルの保存
+            saver.save(sess, 'ckpt/my_model', global_step=step, write_meta_graph=False)
 
 
