@@ -1,6 +1,7 @@
 from tensorflow.examples.tutorials.mnist import input_data
 import tensorflow as tf
 
+
 # mnistデータを格納したオブジェクトを呼び出す
 mnist = input_data.read_data_sets("data/", one_hot=True)
 
@@ -18,13 +19,13 @@ test_labels = mnist.test.labels
 x = tf.placeholder(tf.float32, [None, 784])
 
 # 入力層から中間層
-w_1 = tf.Variable(tf.truncated_normal([784, 64], stddev=0.1), name="w_1")
+w_1 = tf.Variable(tf.truncated_normal([784, 64], stddev=0.1), name="w1")
 b_1 = tf.Variable(tf.zeros([64]), name="b1")
 h_1 = tf.nn.relu(tf.matmul(x, w_1) + b_1)
 
 # 中間層から出力層
-w_2 = tf.Variable(tf.truncated_normal([64, 10], stddev=0.1), name="w_2")
-b_2 = tf.Variable(tf.zeros([10]), name="b_2")
+w_2 = tf.Variable(tf.truncated_normal([64, 10], stddev=0.1), name="w2")
+b_2 = tf.Variable(tf.zeros([10]), name="b2")
 out = tf.nn.softmax(tf.matmul(h_1, w_2) + b_2)
 
 # 誤差関数
@@ -57,5 +58,3 @@ with tf.Session() as sess:
         if step % 10 == 0:
             acc_val = sess.run(accuracy, feed_dict={x: test_images, y: test_labels})
             print('Step %d: accuracy = %.2f' % (step, acc_val))
-
-

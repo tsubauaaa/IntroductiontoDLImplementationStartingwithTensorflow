@@ -9,6 +9,6 @@ y_3 = tf.reduce_mean(x)
 
 with tf.Session() as sess:
     print(a)
-    print(sess.run(y_1, feed_dict={x: a}))
-    print(sess.run(y_2, feed_dict={x: a}))
-    print(sess.run(y_3, feed_dict={x: a}))
+    print(sess.run(y_1, feed_dict={x:a}))
+    print(sess.run(y_2, feed_dict={x:a}))
+    print(sess.run(y_3, feed_dict={x:a}))
